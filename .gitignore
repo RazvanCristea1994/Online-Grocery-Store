@@ -1,0 +1,20 @@
+target
+classes
+bin
+*.log
+dist
+node_modules
+
+### IntelliJ IDEA ###
+.idea
+*.iws
+*.iml
+*.ipr
+out
+.idea
+build
+generated
+MANIFEST.MF
+
+### package n pm ###
+**/node_modules

@@ -1,0 +1,71 @@
+<web-app xmlns="http://java.sun.com/xml/ns/javaee"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://java.sun.com/xml/ns/javaee
+            https://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
+         version="3.0">
+
+  <display-name>Archetype Created Web Application</display-name>
+
+
+  <!-- declare a listener of type ContextLoaderListener to register the Root Spring Application Context -->
+  <!-- make sure it uses the following config XMLs: -->
+  <!-- /WEB-INF/spring/applicationContext.xml
+       /WEB-INF/spring/applicationContext-security.xml -->
+  <!-- https://docs.spring.io/spring/docs/5.2.4.RELEASE/spring-framework-reference/web.html#mvc-servlet -->
+
+
+  <!-- create a servlet of type DispatcherServlet which intercepts all requests on "/" URL -->
+  <!-- make sure it uses the following config XML: -->
+  <!-- WEB-INF/spring/dispatcher-servlet.xml -->
+
+
+  <!-- create the springSecurityFilterChain filter, of type DelegatingFilterProxy which intercepts everything on "/*" -->
+  <!-- https://docs.spring.io/spring-security/site/docs/5.2.2.RELEASE/reference/html5/#ns-web-xml -->
+
+  <context-param>
+    <param-name>contextConfigLocation</param-name>
+    <param-value>
+      /WEB-INF/spring/applicationContext.xml,
+      /WEB-INF/spring/applicationContext-security.xml
+    </param-value>
+  </context-param>
+
+  <listener>
+    <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+  </listener>
+
+  <servlet>
+    <servlet-name>spring-mvc-dispatcher</servlet-name>
+    <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+    <init-param>
+      <param-name>contextConfigLocation</param-name>
+      <param-value>/WEB-INF/spring/dispatcher-servlet.xml</param-value>
+    </init-param>
+  </servlet>
+
+  <servlet-mapping>
+    <servlet-name>spring-mvc-dispatcher</servlet-name>
+    <url-pattern>/</url-pattern>
+  </servlet-mapping>
+
+  <filter>
+    <filter-name>springSecurityFilterChain</filter-name>
+    <filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
+  </filter>
+
+  <filter-mapping>
+    <filter-name>springSecurityFilterChain</filter-name>
+    <url-pattern>/*</url-pattern>
+  </filter-mapping>
+
+  <filter>
+    <filter-name>httpMethodFilter</filter-name>
+    <filter-class>org.springframework.web.filter.HiddenHttpMethodFilter</filter-class>
+  </filter>
+
+  <filter-mapping>
+    <filter-name>httpMethodFilter</filter-name>
+    <servlet-name>spring-mvc-dispatcher</servlet-name>
+  </filter-mapping>
+
+</web-app>
