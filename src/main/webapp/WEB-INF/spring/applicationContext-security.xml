@@ -4,13 +4,26 @@
              xsi:schemaLocation="http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd
 						http://www.springframework.org/schema/security https://www.springframework.org/schema/security/spring-security.xsd">
 
-    <!-- https://docs.spring.io/spring-security/site/docs/5.2.2.RELEASE/reference/html5/#ns-minimal -->
     <global-method-security secured-annotations="enabled"/>
 
-    <http>
+    <http pattern="/users/login" auto-config="true">
+        <custom-filter ref="loginPageFilter" position="PRE_AUTH_FILTER"/>
+    </http>
 
-        <form-login />
-        <logout />
+    <http>
+        <intercept-url pattern="users/add-admin" access="hasAuthority('ADMIN')"/>
+        <intercept-url pattern="users/add-update" access="hasAuthority('ADMIN')"/>
+        <intercept-url pattern="users/add-delete" access="hasAuthority('ADMIN')"/>
+        <intercept-url pattern="users/update-account" method="GET" access="hasAuthority('ADMIN')"/>
+
+        <form-login login-page="/users/login"
+
+                    login-processing-url="/login"
+                    username-parameter="email"
+                    password-parameter="password"
+                    authentication-failure-url="/users/login?error=Invalid+username+or+password"/>
+        <logout logout-url="/logout"
+                success-handler-ref="logoutRequestSuccessHandler"/>
         <csrf disabled="true"/>
         <session-management session-authentication-strategy-ref="sessionAuthenticationStrategy"/>
     </http>

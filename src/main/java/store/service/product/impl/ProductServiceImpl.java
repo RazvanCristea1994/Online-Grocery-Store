@@ -1,6 +1,8 @@
 package store.service.product.impl;
 
 import org.springframework.stereotype.Service;
+import store.dao.product.CategoryDao;
+import store.model.Category;
 import store.service.product.ProductService;
 import store.dao.product.ProductDao;
 import store.model.Product;
@@ -18,40 +20,49 @@ public class ProductServiceImpl implements ProductService {
     @Autowired
     private ProductDao productDao;
 
+    @Autowired
+    private CategoryDao categoryDao;
+
     @Override
     public Product add(Product product) {
 
         Optional<Product> optionalProductName = productDao.getByName(product.getName());
-        optionalProductName.ifPresentOrElse(
-                foundCategory -> {
-                    throw new IllegalArgumentException("This product name already exists. Choose another name or update the existing one");
-                },
-                () -> productDao.save(product)
-        );
+        if(optionalProductName.isPresent()){
+            throw new IllegalArgumentException("This product name already exists. Choose another name or update the existing one.");
+        }
 
+        if (product.getCategory() == null){
+            throw new IllegalArgumentException("This category does not exist. Choose an existing one.");
+        }
+
+        productDao.save(product);
         return product;
     }
 
     @Override
     public Product update(Product product) {
 
-        if (product != null) {
-            Optional<Product> oldProductExists = productDao.getById(product.getId());
-            Optional<Product> newProductName = productDao.getByName(product.getName());
-
-            if (oldProductExists.isPresent()) {
-                if (newProductName.isEmpty()) {
-                    productDao.update(product);
-                } else {
-                    throw new IllegalArgumentException("Product name already used");
-                }
-            } else {
-                throw new NoSuchElementException("The category to change was not found");
-            }
-        } else {
+        if (product == null){
             throw new IllegalArgumentException("Illegal attempt! Please specify one of the products you want to update");
         }
 
+        Optional<Product> oldProduct = productDao.getById(product.getId());
+        if (oldProduct.isEmpty()) {
+            throw new NoSuchElementException("The product to change was not found");
+        }
+
+        if (!oldProduct.get().getName().equals(product.getName())) {
+            Optional<Product> newProductName = productDao.getByName(product.getName());
+            if (newProductName.isPresent()) {
+                throw new IllegalArgumentException("Product name already used");
+            }
+        }
+
+        if (product.getCategory() == null){
+            throw new IllegalArgumentException("This category does not exist");
+        }
+
+        productDao.update(product);
         return product;
     }
 

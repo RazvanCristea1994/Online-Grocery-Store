@@ -52,23 +52,21 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public Category update(Category category) {
 
-        if (category != null) {
-            Optional<Category> oldCategoryExists = categoryDao.getById(category.getId());
-            Optional<Category> newCategoryName = categoryDao.getByName(category.getName());
-
-            if (oldCategoryExists.isPresent()) {
-                if (newCategoryName.isEmpty()) {
-                    categoryDao.update(category);
-                } else {
-                    throw new IllegalArgumentException("Category name already used");
-                }
-            } else {
-                throw new NoSuchElementException("The category to change was not found");
-            }
-        } else {
+        if (category == null) {
             throw new IllegalArgumentException("Illegal attempt! Please specify one of the categories you want to update");
         }
 
+        Optional<Category> oldCategory = categoryDao.getById(category.getId());
+        if (oldCategory.isEmpty()) {
+            throw new NoSuchElementException("The category to change was not found");
+        }
+
+        Optional<Category> newCategoryName = categoryDao.getByName(category.getName());
+        if (newCategoryName.isPresent()) {
+            throw new IllegalArgumentException("Category name already used");
+        }
+
+        categoryDao.update(category);
         return category;
     }
 
@@ -76,14 +74,13 @@ public class CategoryServiceImpl implements CategoryService {
     public void delete(Long id) {
 
         Optional<Category> category = categoryDao.getById(id);
-        if(category.isPresent()) {
-            if (category.get().getProductList().isEmpty()){
-                categoryDao.delete(id);
-            } else {
-                throw new IllegalArgumentException("The category has products. Please remove products from category and try again");
-            }
-        } else {
+        if(category.isEmpty()) {
             throw new NoSuchElementException("Category not found");
         }
+        if (category.get().getProductList().size() > 0){
+            throw new IllegalArgumentException("The category has products. Please remove products from category and try again");
+        }
+
+        categoryDao.delete(id);
     }
 }
