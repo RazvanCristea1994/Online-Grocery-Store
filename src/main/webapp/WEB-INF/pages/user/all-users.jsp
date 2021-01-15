@@ -44,7 +44,7 @@
             <td>
                 <div>
                     <button
-                            onClick="location.href = 'http://localhost:8080/Rzv_war/users/update/${user.email}'">
+                            onClick="location.href = 'http://localhost:8080/Rzv_war/users/update-account/${user.email}'">
                         Update
                     </button>
                     <button

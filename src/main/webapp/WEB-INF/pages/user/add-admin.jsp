@@ -43,7 +43,7 @@
             <td><form:input path="county"/><label>${county_error}</label></td>
         </tr>
         <tr>
-            <td><label><form:label path="streetName">Street Name</form:label><label></td>
+            <td><label><form:label path="streetName">Street Name</form:label></label></td>
             <td><form:input path="streetName"/><label>${street_name}</label></td>
         </tr>
         <tr>

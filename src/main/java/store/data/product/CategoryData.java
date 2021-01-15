@@ -2,15 +2,14 @@ package store.data.product;
 
 import store.model.Product;
 
-import javax.validation.constraints.Digits;
-import javax.validation.constraints.Size;
+import javax.validation.constraints.*;
 import java.util.List;
 
 public class CategoryData {
 
-    @Digits(integer = 8, fraction = 0)
     private Long id;
-    @Size(min = 2, max = 20)
+    @NotEmpty
+    @Size(min = 2, max = 20, message = "The name should be between 2 and 20 characters")
     private String name;
     private List<Product> productList;
 

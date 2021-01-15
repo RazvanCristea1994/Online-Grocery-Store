@@ -1,4 +1,3 @@
-%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <html>
 <head>
@@ -8,7 +7,7 @@
 <h1>Update Customer Account</h1>
 <hr>
 
-<form:form method="POST" action="http://localhost:8080/Rzv_war/users/update-customer" modelAttribute="userViewData">
+<form:form method="POST" action="http://localhost:8080/Rzv_war/users/update-account" modelAttribute="user">
     <table>
         <tr>
             <td><label><form:label path="firstName">First Name</form:label></label></td>
@@ -57,7 +56,7 @@
         <tr>
             <td>
                 <button onclick="location.href = 'http://localhost:8080/Rzv_war/users/delete-account'">
-                    Delete my Account">
+                    Delete my Account
                 </button>
             </td>
 

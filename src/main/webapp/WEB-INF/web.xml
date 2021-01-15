@@ -6,22 +6,6 @@
 
   <display-name>Archetype Created Web Application</display-name>
 
-
-  <!-- declare a listener of type ContextLoaderListener to register the Root Spring Application Context -->
-  <!-- make sure it uses the following config XMLs: -->
-  <!-- /WEB-INF/spring/applicationContext.xml
-       /WEB-INF/spring/applicationContext-security.xml -->
-  <!-- https://docs.spring.io/spring/docs/5.2.4.RELEASE/spring-framework-reference/web.html#mvc-servlet -->
-
-
-  <!-- create a servlet of type DispatcherServlet which intercepts all requests on "/" URL -->
-  <!-- make sure it uses the following config XML: -->
-  <!-- WEB-INF/spring/dispatcher-servlet.xml -->
-
-
-  <!-- create the springSecurityFilterChain filter, of type DelegatingFilterProxy which intercepts everything on "/*" -->
-  <!-- https://docs.spring.io/spring-security/site/docs/5.2.2.RELEASE/reference/html5/#ns-web-xml -->
-
   <context-param>
     <param-name>contextConfigLocation</param-name>
     <param-value>

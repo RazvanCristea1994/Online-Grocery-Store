@@ -13,11 +13,7 @@
 
     <task:annotation-driven />
 
-    <!-- scan all beans declared with annotations in package "store" -->
     <context:component-scan base-package="store"/>
-
-    <!-- create a dataSource bean of type org.apache.commons.dbcp2.BasicDataSource
-    where you will specify the connection pooling information for your database -->
 
     <bean id="foodShopDataSource" class="org.apache.commons.dbcp2.BasicDataSource" destroy-method="close">
         <property name="driverClassName" value="com.mysql.cj.jdbc.Driver"/>
@@ -25,11 +21,6 @@
         <property name="username" value="root"/>
         <property name="password" value="root"/>
     </bean>
-
-    <!-- create a sessionFactory bean of type LocalSessionFactoryBean -->
-    <!-- inject in it the previously created dataSource -->
-    <!-- this will allow us to inject and use the SessionFactory bean in the DAOs to use the Hibernate Session API -->
-    <!-- https://docs.spring.io/spring/docs/5.2.4.RELEASE/spring-framework-reference/data-access.html#orm-hibernate -->
 
     <bean id="foodShopSessionFactory" class="org.springframework.orm.hibernate5.LocalSessionFactoryBean">
         <property name="dataSource" ref="foodShopDataSource"/>
@@ -43,11 +34,6 @@
         </property>
         <property name="packagesToScan" value="store"/>
     </bean>
-
-    <!-- create a transactionManager bean of type HibernateTransactionManager -->
-    <!-- inject in it the previously created sessionFactory !-->
-    <!-- make sure it scans all Service classes/methods with the @Transactional annotation to begin/commit transactions automatically -->
-    <!-- https://docs.spring.io/spring/docs/5.2.4.RELEASE/spring-framework-reference/data-access.html#orm-hibernate-tx-declarative -->
 
     <bean id="transactionManager" class="org.springframework.orm.hibernate5.HibernateTransactionManager">
         <property name="sessionFactory" ref="foodShopSessionFactory"/>

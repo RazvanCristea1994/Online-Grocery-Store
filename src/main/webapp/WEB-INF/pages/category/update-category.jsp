@@ -8,15 +8,16 @@
 <h1>Update Category</h1>
 <hr>
 
-<form:form method="PUT" action="http://localhost:8080/Rzv_war/categories/update/${category.id}"
+<form:form method="POST" action="http://localhost:8080/Rzv_war/categories/update/${category.id}"
            modelAttribute="category">
     <table>
         <tr>
             <td><form:label path="name">Name</form:label></td>
-            <td><form:input path="name"/></td>
+            <td><form:input path="name"/><label>${name_error}</label></td>
         </tr>
         <tr>
             <td><input type="submit" value="Submit"/></td>
+            <td><label>${status}</label></td>
         </tr>
     </table>
 </form:form>
