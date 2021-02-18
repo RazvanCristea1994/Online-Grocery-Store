@@ -8,7 +8,7 @@ import java.util.List;
 public class CategoryData {
 
     private Long id;
-    @NotEmpty
+    @NotBlank(message = "Requested")
     @Size(min = 2, max = 20, message = "The name should be between 2 and 20 characters")
     private String name;
     private List<Product> productList;

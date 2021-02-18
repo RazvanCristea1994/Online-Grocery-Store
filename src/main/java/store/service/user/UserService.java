@@ -2,17 +2,18 @@ package store.service.user;
 
 import store.model.BillingAddress;
 import store.model.User;
+import store.model.UserRole;
 
 import java.util.List;
 import java.util.Optional;
 
 public interface UserService {
 
-    void insertAdmin(User user);
-
-    void insertCustomer(User user);
+    void insertUser(User user, UserRole userRole);
 
     List<User> getAll();
+
+    List<User> getByRole(Enum role);
 
     void update(User user);
 

@@ -33,8 +33,6 @@ public class ProductController {
     @PostMapping("/add")
     public String add(@Valid @ModelAttribute("product") ProductData productData, BindingResult bindingResult, Model model) {
 
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        authentication.getAuthorities();
         if (bindingResult.hasErrors()) {
             List<FieldError> errorList = bindingResult.getFieldErrors();
             errorList.forEach(errorField ->
@@ -67,7 +65,7 @@ public class ProductController {
         return "product/update-product";
     }
 
-    @PostMapping("/update/{id}")
+    @PutMapping("/update/{id}")
     public String update(@Validated @ModelAttribute("product") ProductData productData,
                          BindingResult bindingResult, Model model) {
 
@@ -79,7 +77,7 @@ public class ProductController {
         } else {
             try {
                 productFacade.update(productData);
-                model.addAttribute("status", "The product has been updated");
+                model.addAttribute("status", "The update was done successfully");
                 return "redirect:/products";
             } catch (IllegalArgumentException exception) {
                 model.addAttribute("product");

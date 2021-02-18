@@ -1,39 +1,41 @@
 package store.data.user;
 
-import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 
 public class UserViewData {
 
-    @NotEmpty
-    @Pattern(regexp = "^[A-Za-z -]")
+    @NotBlank(message = "Requested")
+    @Pattern(regexp = "^[A-Za-z0-9+ -]*$")
     private String firstName;
-    @NotEmpty
-    @Pattern(regexp = "^[A-Za-z -]")
+    @NotBlank(message = "Requested")
+    @Pattern(regexp = "^[A-Za-z0-9+ -]*$")
     private String lastName;
-    @NotEmpty
+    @NotNull(message = "Requested")
+    @Pattern(regexp = "^[0-9+]*$")
     private String phoneNumber;
     private String addressId;
-    @NotEmpty
-    @Pattern(regexp = "^[A-Za-z -]")
+    @NotBlank(message = "Requested")
+    @Pattern(regexp = "^[A-Za-z -]*$")
     private String country;
-    @NotEmpty
-    @Pattern(regexp = "^[A-Za-z -]")
+    @NotBlank(message = "Requested")
+    @Pattern(regexp = "^[A-Za-z -]*$")
     private String city;
-    @NotEmpty
-    @Pattern(regexp = "^[A-Za-z -]")
+    @NotBlank(message = "Requested")
+    @Pattern(regexp = "^[A-Za-z -]*$")
     private String county;
-    @NotEmpty
-    @Pattern(regexp = "^[A-Za-z -]")
+    @NotBlank(message = "Requested")
+    @Pattern(regexp = "^[A-Za-z -]*$")
     private String streetName;
-    @NotEmpty
-    @Pattern(regexp = "^[0-9]")
+    @NotBlank(message = "Requested")
+    @Pattern(regexp = "^[0-9]*$")
     private String streetNumber;
-    @NotEmpty
-    @Pattern(regexp = "^[0-9]")
+    @NotNull(message = "Requested")
+    @Pattern(regexp = "^[0-9]*$")
     private String flatNumber;
-    @NotEmpty
-    @Pattern(regexp = "^[0-9]")
+    @NotNull(message = "Requested")
+    @Pattern(regexp = "^[0-9]*$")
     private String buildingNumber;
 
     public UserViewData() {

@@ -1,5 +1,3 @@
-<%@ page isELIgnored="false" %>
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <html>
@@ -22,5 +20,6 @@
         </tr>
     </table>
 </form:form>
+<button onClick="location.href = '${pageContext.request.contextPath}/categories'">Back to Categories</button>
 </body>
 </html>

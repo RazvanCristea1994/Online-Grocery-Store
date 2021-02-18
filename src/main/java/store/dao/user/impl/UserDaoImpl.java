@@ -16,6 +16,16 @@ import java.util.Optional;
 public class UserDaoImpl extends HibernateAbstractCrudRepository<String, User> implements UserDao {
 
     @Override
+    public List<User> getByRole(Enum askedRole) {
+
+        Session session = this.getCurrentSession();
+        Query<User> query = session.createQuery("FROM " + this.getValueClass().getName()
+                + " user WHERE user.role=:role", this.getValueClass());
+        query.setParameter("role", askedRole);
+        return query.list();
+    }
+ 
+    @Override
     public Optional<User> getByEmail(String email) {
 
         Session session = this.getCurrentSession();

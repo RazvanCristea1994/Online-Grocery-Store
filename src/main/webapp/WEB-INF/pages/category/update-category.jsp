@@ -1,5 +1,6 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+         pageEncoding="UTF-8" isErrorPage="true"%>
 <html>
 <head>
     <title>Update Category</title>
@@ -8,7 +9,7 @@
 <h1>Update Category</h1>
 <hr>
 
-<form:form method="POST" action="http://localhost:8080/Rzv_war/categories/update/${category.id}"
+<form:form method="PUT" action="http://localhost:8080/Rzv_war/categories/update/${category.id}"
            modelAttribute="category">
     <table>
         <tr>
@@ -21,5 +22,6 @@
         </tr>
     </table>
 </form:form>
+<button onClick="location.href = '${pageContext.request.contextPath}/categories'">Back to Products</button>
 </body>
 </html>

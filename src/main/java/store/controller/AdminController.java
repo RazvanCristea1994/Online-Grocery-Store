@@ -2,10 +2,8 @@ package store.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestWrapper;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -28,8 +26,8 @@ import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Controller
-@RequestMapping("/user")
-public class UserController {
+@RequestMapping("/admin")
+public class AdminController extends UserController {
 
     @Autowired
     private UserFacade userFacade;
@@ -40,23 +38,15 @@ public class UserController {
     @Autowired
     private UserConverter userConverter;
 
-    @GetMapping("/login")
-    public String login(Authentication authentication){
-        return "user/login";
-    }
-
-    @GetMapping("/create-customer-account")
-    public String showCreateAccount(Model model, HttpServletRequest request){
+    @GetMapping("/add-admin")
+    public String showAddAdmin(Model model) {
 
         model.addAttribute("userData", new UserData());
-        if(request.isUserInRole(String.valueOf(UserRole.ADMIN))){
-            return "admin/add-account";
-        }
-        return "user/create-customer-account";
+        return "admin/add-account";
     }
 
-    @PostMapping("/create-my-customer-account")
-    public String createAccount(@Valid @ModelAttribute("userData") UserData userData, BindingResult bindingResult, Model model){
+    @PostMapping("/add-admin")
+    public String addAdmin(@Valid @ModelAttribute("userData") UserData userData, BindingResult bindingResult, Model model){
 
         if (bindingResult.hasErrors()){
             List<FieldError> errors = bindingResult.getFieldErrors();
@@ -64,7 +54,7 @@ public class UserController {
                     model.addAttribute(errorField.getField() + "_error", userValidator.getErrorMessage(errorField)));
         } else {
             try {
-                userFacade.insertUser(userData, UserRole.CUSTOMER);
+                userFacade.insertUser(userData, UserRole.ADMIN);
                 model.addAttribute("userData", userData);
                 model.addAttribute("status", "The account has been created");
             } catch (DataIntegrityViolationException exception) {
@@ -72,24 +62,32 @@ public class UserController {
             }
         }
 
-        return "user/create-customer-account";
+        return "admin/add-account";
     }
 
-    @GetMapping("/update-my-account/")
-    public String update(Principal principal, Model model) {
+    @GetMapping
+    public String getAll(Model model) {
 
-        Optional<User> optionalUser = userFacade.getByEmail(principal.getName());
+        model.addAttribute("admins", userFacade.getByRole(UserRole.ADMIN));
+        model.addAttribute("users", userFacade.getByRole(UserRole.CUSTOMER));
+        return "admin/all-users";
+    }
+
+    @GetMapping("/update-user/{email:.+}")
+    public String updateUser(@PathVariable("email") String email, Model model) {
+
+        Optional<User> optionalUser = userFacade.getByEmail(email);
         if (optionalUser.isEmpty()) {
             return "redirect:/user/login/?message=Error";
         }
-        model.addAttribute("email", principal.getName());
-        model.addAttribute("customer", userConverter.convert(optionalUser.get()));
+        model.addAttribute("email", email);
+        model.addAttribute("user", userConverter.convert(optionalUser.get()));
 
-        return "user/update-my-account";
+        return "admin/update-user";
     }
 
-    @PutMapping("/update-my-account/")
-    public String update(Principal principal,
+    @PutMapping("/update-user/{email:.+}")
+    public String updateUser(@PathVariable("email") String email,
                          @Valid @ModelAttribute("customer") UserViewData userViewData,
                          BindingResult bindingResult, Model model){
 
@@ -99,35 +97,43 @@ public class UserController {
                     model.addAttribute(errorField.getField() + "_error", userValidator.getErrorMessage(errorField)));
         } else {
             try {
-                userFacade.updateUserAccount(principal.getName(), userViewData);
+                userFacade.updateUserAccount(email, userViewData);
                 model.addAttribute("status", "The update was done successfully");
+                return "redirect:";
             } catch (UsernameNotFoundException | IllegalArgumentException exception) {
                 model.addAttribute("status", exception.getMessage());
             }
         }
 
-        return "user/update-my-account";
+        return "admin/update-user";
     }
 
-    @GetMapping("/delete")
-    public String showDeleteUser() {
-
-        return "user/delete-my-account";
+    @GetMapping("/delete-account/{email:.+}")
+    public String deleteUser(@PathVariable("email") String email, Model model) {
+        Optional<User> optionalUser = userFacade.getByEmail(email);
+        if (optionalUser.isEmpty()) {
+            return "redirect:/admin/?message=Error";
+        }
+        model.addAttribute("email", email);
+        return "admin/delete-admin";
     }
 
-    @DeleteMapping("/delete-my-account")
-    public String deleteMyAccount(Principal principal, HttpServletRequest request, Model model){
+    @DeleteMapping("/delete-account/{email:.+}")
+    public String deleteUser(@PathVariable("email") String email, Principal principal, HttpServletRequest request, Model model){
 
         try {
-            userFacade.delete(principal.getName());
+            userFacade.delete(email);
         } catch (NoSuchElementException exception){
             model.addAttribute("status", exception.getMessage());
         }
-        HttpSession session = request.getSession(false);
-        SecurityContextHolder.clearContext();
-        if(session != null){
-            session.invalidate();
+        if (email.equals(principal.getName())){
+            HttpSession session = request.getSession(false);
+            SecurityContextHolder.clearContext();
+            if(session != null){
+                session.invalidate();
+            }
+            return "redirect:/products";
         }
-        return "redirect:/products";
+        return "redirect:/admin";
     }
 }

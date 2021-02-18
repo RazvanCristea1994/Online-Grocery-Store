@@ -2,47 +2,45 @@ package store.data.user;
 
 import store.model.UserRole;
 
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.Pattern;
+import javax.validation.constraints.*;
 
 public class UserData {
 
-    @Email
-    @NotEmpty
+    @Email(message = "Provide a valid email")
+    @NotBlank(message = "Requested")
     private String email;
     private UserRole role;
     @Pattern(regexp = "^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{8,}$") //min 8 characters, at least 1 letter, 1 number
     private String password;
-    @NotEmpty
-    @Pattern(regexp = "^[A-Za-z -]*$")
+    @NotBlank(message = "Requested")
+    @Pattern(regexp = "^[A-Za-z0-9+ -]*$")
     private String firstName;
-    @NotEmpty
-    @Pattern(regexp = "^[A-Za-z -]*$")
+    @NotBlank(message = "Requested")
+    @Pattern(regexp = "^[A-Za-z0-9+ -]*$")
     private String lastName;
-    @NotEmpty
+    @NotNull(message = "Requested")
     @Pattern(regexp = "^[0-9+]*$")
     private String phoneNumber;
     private String addressId;
-    @NotEmpty
+    @NotBlank(message = "Requested")
     @Pattern(regexp = "^[A-Za-z -]*$")
     private String country;
-    @NotEmpty
+    @NotBlank(message = "Requested")
     @Pattern(regexp = "^[A-Za-z -]*$")
     private String city;
-    @NotEmpty
+    @NotBlank(message = "Requested")
     @Pattern(regexp = "^[A-Za-z -]*$")
     private String county;
-    @NotEmpty
+    @NotBlank(message = "Requested")
     @Pattern(regexp = "^[A-Za-z -]*$")
     private String streetName;
-    @NotEmpty
+    @NotBlank(message = "Requested")
     @Pattern(regexp = "^[0-9]*$")
     private String streetNumber;
-    @NotEmpty
+    @NotNull(message = "Requested")
     @Pattern(regexp = "^[0-9]*$")
     private String flatNumber;
-    @NotEmpty
+    @NotNull(message = "Requested")
     @Pattern(regexp = "^[0-9]*$")
     private String buildingNumber;
 

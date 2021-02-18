@@ -2,13 +2,13 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <html>
 <head>
-    <title>Create Admin Account</title>
+    <title>Create Customer Account</title>
 </head>
 <body>
-<h1>Create Admin Account</h1>
+<h1>Create Customer Account</h1>
 <hr>
 
-<form:form method="POST" action="http://localhost:8080/Rzv_war/users/add-admin" modelAttribute="userData">
+<form:form method="POST" action="http://localhost:8080/Rzv_war/user/create-my-customer-account" modelAttribute="userData">
     <table>
         <tr>
             <td><label><form:label path="email">Email</form:label></label></td>
@@ -66,9 +66,8 @@
 
 </form:form>
 <div>
-    <button onclick="location.href = '${pageContext.request.contextPath}/users'">
-        Back
-    </button>
+    <button type="button" name="back" onclick="location.href = '${pageContext.request.contextPath}'">Back</button>
 </div>
 </body>
 </html>
+

@@ -36,5 +36,6 @@
         </tr>
     </table>
 </form:form>
+<button onClick="location.href = '${pageContext.request.contextPath}/products'">Back to Products</button>
 </body>
 </html>

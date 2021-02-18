@@ -8,7 +8,6 @@ import store.model.BillingAddress;
 @Repository
 public class BillingAddressDaoImpl extends HibernateAbstractCrudRepository<Long, BillingAddress> implements BillingAddressDao {
 
-
     @Override
     protected Class<BillingAddress> getValueClass() {
         return BillingAddress.class;

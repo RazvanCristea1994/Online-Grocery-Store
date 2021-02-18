@@ -8,6 +8,7 @@ import store.facade.converter.Converter;
 import store.facade.user.UserFacade;
 import store.model.BillingAddress;
 import store.model.User;
+import store.model.UserRole;
 import store.service.user.UserService;
 
 import java.util.List;
@@ -29,14 +30,9 @@ public class UserFacadeImpl implements UserFacade {
     private Converter<UserViewData, User> viewReverseConverter;
 
     @Override
-    public void insertAdmin(UserData userData) {
+    public void insertUser(UserData userData, UserRole userRole) {
         User user = reverseConverter.convert(userData);
-        userService.insertAdmin(user);
-    }
-
-    @Override
-    public void insertCustomer(UserData userData) {
-        userService.insertCustomer(reverseConverter.convert(userData));
+        userService.insertUser(user, userRole);
     }
 
     @Override
@@ -47,21 +43,18 @@ public class UserFacadeImpl implements UserFacade {
     }
 
     @Override
+    public List<UserData> getByRole(Enum role) {
+
+        List<User> users = userService.getByRole(role);
+        return converter.convertAll(users);
+    }
+
+    @Override
     public void updateUserAccount(String email, UserViewData userViewData) {
 
         User user = viewReverseConverter.convert(userViewData);
         user.setEmail(email);
-        Optional<User> oldUser = userService.getByEmail(email);
-        oldUser.ifPresent(
-                foundUser -> {
-                    user.setPassword(oldUser.get().getPassword());
-                    user.setRole(oldUser.get().getRole());
-                    BillingAddress billingAddress = user.getBillingAddress();
-                    billingAddress.setId(oldUser.get().getBillingAddress().getId());
-                    user.setBillingAddress(billingAddress);
-                    userService.update(user);
-                }
-        );
+        userService.update(user);
     }
 
     @Override
