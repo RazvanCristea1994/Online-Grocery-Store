@@ -43,7 +43,7 @@ public class CategoryController {
                 return "redirect:/categories";
             } catch (IllegalArgumentException exception) {
                 model.addAttribute("category");
-                model.addAttribute("status", "The category cannot be added");
+                model.addAttribute("status", exception.getMessage());
                 return "category/add-category";
             }
         }
@@ -62,7 +62,7 @@ public class CategoryController {
         return "category/update-category";
     }
 
-    @PostMapping("/update/{id}")
+    @PutMapping("/update/{id}")
     public String update(@Validated @ModelAttribute("category") CategoryData categoryData,
                          BindingResult bindingResult, Model model) {
 
@@ -78,7 +78,7 @@ public class CategoryController {
                 return "redirect:/categories";
             } catch (IllegalArgumentException exception) {
                 model.addAttribute("category");
-                model.addAttribute("status", "The category cannot be updated");
+                model.addAttribute("status", exception.getMessage());
                 return "category/update-category";
             }
         }
@@ -91,7 +91,7 @@ public class CategoryController {
             categoryFacade.delete(id);
             model.addAttribute("status", "Category has been deleted");
         } catch (Exception exception){
-            model.addAttribute("status", "Category could not be deleted");
+            model.addAttribute("status", exception.getMessage());
         }
 
         return "redirect:/categories";

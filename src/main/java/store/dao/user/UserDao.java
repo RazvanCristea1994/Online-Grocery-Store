@@ -12,6 +12,8 @@ public interface UserDao {
 
     List<User> getAll();
 
+    List<User> getByRole(Enum role);
+
     Optional<User> getByEmail(String email);
 
     Optional<User> getByPhoneNumber(String phoneNumber);

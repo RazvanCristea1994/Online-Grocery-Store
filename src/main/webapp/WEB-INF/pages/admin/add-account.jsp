@@ -1,14 +1,23 @@
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <html>
 <head>
-    <title>Update Customer Account</title>
+    <title>Create Admin Account</title>
 </head>
 <body>
-<h1>Update Customer Account</h1>
+<h1>Create Admin Account</h1>
 <hr>
 
-<form:form method="POST" action="http://localhost:8080/Rzv_war/users/update-account" modelAttribute="user">
+<form:form method="POST" action="http://localhost:8080/Rzv_war/admin/add-admin" modelAttribute="userData">
     <table>
+        <tr>
+            <td><label><form:label path="email">Email</form:label></label></td>
+            <td><form:input path="email"/><label>${email_error}</label></td>
+        </tr>
+        <tr>
+            <td><label><form:label path="password">Password</form:label></label></td>
+            <td><form:input path="password" type="password"/><label>${password_error}</label></td>
+        </tr>
         <tr>
             <td><label><form:label path="firstName">First Name</form:label></label></td>
             <td><form:input path="firstName"/><label>${firstName_error}</label></td>
@@ -34,7 +43,7 @@
             <td><form:input path="county"/><label>${county_error}</label></td>
         </tr>
         <tr>
-            <td><label><form:label path="streetName">Street Name</form:label><label></td>
+            <td><label><form:label path="streetName">Street Name</form:label></label></td>
             <td><form:input path="streetName"/><label>${street_name}</label></td>
         </tr>
         <tr>
@@ -50,24 +59,14 @@
             <td><form:input path="buildingNumber"/><label>${buildingNumber_error}</label></td>
         </tr>
         <tr>
-            <td><input type="submit" value="Update"/></td>
+            <td><input type="submit" value="Submit"/></td>
             <td><label>${status}</label></td>
-        </tr>
-        <tr>
-            <td>
-                <button onclick="location.href = 'http://localhost:8080/Rzv_war/users/delete-account'">
-                    Delete my Account
-                </button>
-            </td>
-
         </tr>
     </table>
 
 </form:form>
 <div>
-    <button onclick="location.href = '${pageContext.request.contextPath}'">
-        Back
-    </button>
+    <button type="button" name="back" onclick="location.href = '${pageContext.request.contextPath}/admin'">Back</button>
 </div>
 </body>
 </html>

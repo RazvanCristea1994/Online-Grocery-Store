@@ -1,24 +1,28 @@
 package store.data.product;
 
+import org.springframework.format.annotation.NumberFormat;
+
 import javax.validation.constraints.*;
 
 public class ProductData {
 
     @Digits(integer = 8, fraction = 0)
     private Long id;
-    @NotEmpty
-    @Size(min = 2, max = 20, message = "Category should have between 2 and 20 characters and it should be an existing one")
+    @NotEmpty(message = "Requested")
+    @Size(min = 2, max = 20, message = "Category should be an existing one")
     private String categoryName;
-    @NotBlank
+    @NotBlank(message = "Requested")
     @Size(min = 2, max = 20, message = "Name should have between 2 and 20 characters")
     private String name;
-    @NotBlank
+    @NotBlank(message = "Requested")
     @Size(min = 2, max = 200, message = "Description should have between 2 and 200 characters")
     private String description;
-    @NotNull
+    @NotNull(message = "Requested")
+    @PositiveOrZero(message = "It cannot be a negative number")
     @Digits(integer = 8, fraction = 2, message = "Example: 4.99")
     private Double price;
-    @NotNull
+    @NotNull(message = "Requested")
+    @PositiveOrZero(message = "It cannot be a negative number")
     @Digits(integer = 8, fraction = 0, message = "The stock should have 1->8 digits")
     private Integer stock;
 

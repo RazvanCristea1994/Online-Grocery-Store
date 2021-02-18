@@ -31,8 +31,7 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public List<Category> getAll() {
-        List list = categoryDao.getAll();
-        return list;
+        return categoryDao.getAll();
     }
 
     @Override
@@ -58,7 +57,7 @@ public class CategoryServiceImpl implements CategoryService {
 
         Optional<Category> oldCategory = categoryDao.getById(category.getId());
         if (oldCategory.isEmpty()) {
-            throw new NoSuchElementException("The category to change was not found");
+            throw new IllegalArgumentException("The category to change was not found");
         }
 
         Optional<Category> newCategoryName = categoryDao.getByName(category.getName());
@@ -77,7 +76,7 @@ public class CategoryServiceImpl implements CategoryService {
         if(category.isEmpty()) {
             throw new NoSuchElementException("Category not found");
         }
-        if (category.get().getProductList().size() > 0){
+        if (!category.get().getProductList().isEmpty()){
             throw new IllegalArgumentException("The category has products. Please remove products from category and try again");
         }
 

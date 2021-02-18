@@ -22,7 +22,7 @@ public class BillingAddress {
 
     @Id
     @GeneratedValue
-    @Column(name =  "id")
+    @Column(name =  "id", unique = true)
     public Long getId() {
         return id;
     }

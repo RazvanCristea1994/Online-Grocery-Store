@@ -6,22 +6,33 @@
 
     <global-method-security secured-annotations="enabled"/>
 
-    <http pattern="/users/login" auto-config="true">
+    <http pattern="/user/login" auto-config="true">
         <custom-filter ref="loginPageFilter" position="PRE_AUTH_FILTER"/>
     </http>
 
     <http>
-        <intercept-url pattern="users/add-admin" access="hasAuthority('ADMIN')"/>
-        <intercept-url pattern="users/add-update" access="hasAuthority('ADMIN')"/>
-        <intercept-url pattern="users/add-delete" access="hasAuthority('ADMIN')"/>
-        <intercept-url pattern="users/update-account" method="GET" access="hasAuthority('ADMIN')"/>
+        <intercept-url pattern="/admin/add-admin" access="hasAuthority('ADMIN')"/>
+        <intercept-url pattern="/admin/update-admin/*" access="hasAuthority('ADMIN')"/>
+        <intercept-url pattern="/admin/delete/*" access="hasAuthority('ADMIN')"/>
+        <intercept-url pattern="/admin/delete-my-account/*" access="isFullyAuthenticated()"/>
+        <intercept-url pattern="/admin*" access="hasAuthority('ADMIN')"/>
 
-        <form-login login-page="/users/login"
+        <intercept-url pattern="/products/add" access="hasAuthority('ADMIN')"/>
+        <intercept-url pattern="/products/update/*" access="hasAuthority('ADMIN')"/>
+        <intercept-url pattern="/products/delete/*" access="hasAuthority('ADMIN')"/>
+        <intercept-url pattern="/products" access="permitAll()"/>
+
+        <intercept-url pattern="/categories/add" access="hasAuthority('ADMIN')"/>
+        <intercept-url pattern="/categories/update/*" access="hasAuthority('ADMIN')"/>
+        <intercept-url pattern="/categories/delete/*" access="hasAuthority('ADMIN')"/>
+        <intercept-url pattern="/categories" access="permitAll()"/>
+
+        <form-login login-page="/user/login"
 
                     login-processing-url="/login"
                     username-parameter="email"
                     password-parameter="password"
-                    authentication-failure-url="/users/login?error=Invalid+username+or+password"/>
+                    authentication-failure-url="/user/login?error=Invalid+username+or+password"/>
         <logout logout-url="/logout"
                 success-handler-ref="logoutRequestSuccessHandler"/>
         <csrf disabled="true"/>

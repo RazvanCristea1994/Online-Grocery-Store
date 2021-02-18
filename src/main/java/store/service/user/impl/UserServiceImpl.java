@@ -20,6 +20,7 @@ import store.service.user.UserService;
 import javax.transaction.Transactional;
 import java.util.Collections;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Service
@@ -36,31 +37,23 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     private BillingAddressDao billingAddressDao;
 
     @Override
-    public void insertAdmin(User user) {
+    public void insertUser(User user, UserRole userRole) {
 
-        Optional<User> optionalUser = userDao.getByEmail(user.getEmail());
-        optionalUser.ifPresentOrElse(
+        Optional<User> optionalUserCheckEmail = userDao.getByEmail(user.getEmail());
+        Optional<User> optionalUserCheckPhoneNumber = userDao.getByPhoneNumber(user.getPhoneNumber());
+
+        optionalUserCheckEmail.ifPresent(
                 foundUser -> {
-                    throw new DataIntegrityViolationException("Invalid email");
-                },
-                () -> {
-                    user.setRole(UserRole.ADMIN);
-                    user.setPassword(passwordEncoder.encode(user.getPassword()));
-                    userDao.save(user);
+                    throw new DataIntegrityViolationException("This email already exist");
                 }
         );
-    }
 
-    @Override
-    public void insertCustomer(User user) {
-
-        Optional<User> optionalUser = userDao.getByEmail(user.getEmail());
-        optionalUser.ifPresentOrElse(
+        optionalUserCheckPhoneNumber.ifPresentOrElse(
                 foundUser -> {
-                    throw new DataIntegrityViolationException("Invalid email");
+                    throw new DataIntegrityViolationException("This phone number already exist");
                 },
                 () -> {
-                    user.setRole(UserRole.CUSTOMER);
+                    user.setRole(userRole);
                     user.setPassword(passwordEncoder.encode(user.getPassword()));
                     userDao.save(user);
                 }
@@ -76,12 +69,30 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
+    public List<User> getByRole(Enum role) {
+
+        List<User> users = userDao.getByRole(role);
+        users.forEach(user -> Hibernate.initialize(user.getBillingAddress()));
+        return users;
+    }
+
+    @Override
     public void update(User user) {
 
-        Optional<User> optionalUser = userDao.getByEmail(user.getEmail());
-        optionalUser.ifPresentOrElse(
+        Optional<User> oldUser = userDao.getByEmail(user.getEmail());
+        Optional<User> optionalUser = userDao.getByPhoneNumber(user.getPhoneNumber());
+        if (!optionalUser.isEmpty() && !oldUser.equals(optionalUser)){
+            throw new IllegalArgumentException("Phone number already used");
+        }
+        oldUser.ifPresentOrElse(
                 foundUser -> {
+                    user.setPassword(oldUser.get().getPassword());
+                    user.setRole(oldUser.get().getRole());
+                    BillingAddress billingAddress = user.getBillingAddress();
+                    billingAddress.setId(oldUser.get().getBillingAddress().getId());
+                    user.setBillingAddress(billingAddress);
                     billingAddressDao.update(user.getBillingAddress());
+
                     userDao.update(user);
                 },
                 () -> {
@@ -116,7 +127,9 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     public void delete(String email) {
 
         Optional<User> optionalUser = userDao.getByEmail(email);
-        optionalUser.ifPresent(o -> userDao.delete(email));
+        optionalUser.ifPresentOrElse(o -> userDao.delete(email), () -> {
+            throw new NoSuchElementException("Error. The account was not deleted");
+        });
     }
 
     @Override

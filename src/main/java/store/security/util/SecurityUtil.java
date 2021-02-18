@@ -23,8 +23,8 @@ public class SecurityUtil {
 
     private String getRedirectUrlAfterLoginDependingOnUserRole(UserRole userRole){
 
-        if (userRole == UserRole.ADMIN){
-            return "/products";
+        if (userRole == UserRole.ADMIN){ //ToDO
+            return "/";
         }
         return "/";
     }

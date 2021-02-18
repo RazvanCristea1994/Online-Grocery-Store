@@ -64,7 +64,7 @@ public class User implements Serializable {
     }
 
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name = "user_id", nullable = false)
+    @JoinColumn(name = "billing_id", nullable = false)
     public BillingAddress getBillingAddress() {
         return billingAddress;
     }

@@ -1,4 +1,5 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <%@ page contentType="text/html;charset=UTF-8" %>
 <html>
 <head>
@@ -7,10 +8,9 @@
 <body>
 <h1>List of Products</h1>
 <hr>
-
-<button type="button"
-        onclick="window.location.href = 'http://localhost:8080/Rzv_war/products/add'">Add product
-</button>
+<sec:authorize access="hasAuthority('ADMIN')">
+    <button type="button" onclick="window.location.href = 'http://localhost:8080/Rzv_war/products/add'">Add product</button>
+</sec:authorize>
 
 <table>
     <tr>
@@ -19,7 +19,9 @@
         <th>Price</th>
         <th>Description</th>
         <th>Stock</th>
+        <sec:authorize access="hasAuthority('ADMIN')">
         <th>Actions</th>
+        </sec:authorize>
     </tr>
 
     <c:forEach items="${products}" var="product">
@@ -29,6 +31,8 @@
             <td>${product.price}</td>
             <td>${product.description}</td>
             <td>${product.stock}</td>
+
+            <sec:authorize access="hasAuthority('ADMIN')">
             <td>
                 <div class="btn-group" role="group">
                     <button type="button"
@@ -41,6 +45,7 @@
                     </button>
                 </div>
             </td>
+            </sec:authorize>
         </tr>
     </c:forEach>
 </table>
@@ -48,7 +53,6 @@
 <button type="button"
         onclick="window.location.href = 'http://localhost:8080/Rzv_war/categories'">Go to categories page
 </button>
-<button onclick="location.href = '${pageContext.request.contextPath}'">Back</button>
-
+<button type="button" name="back" onclick="location.href = '${pageContext.request.contextPath}'">Back to main page</button>
 </body>
 </html>
