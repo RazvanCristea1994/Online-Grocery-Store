@@ -1,15 +1,17 @@
 package store.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 import store.data.product.ProductData;
+import store.data.product.ProductDetailsData;
+import store.data.review.ReviewData;
 import store.facade.product.ProductFacade;
 
 import javax.validation.Valid;
@@ -19,6 +21,8 @@ import java.util.List;
 @Controller
 @RequestMapping("/products")
 public class ProductController {
+
+    private static final int PRODUCTS_PER_PAGE = 4;
 
     @Autowired
     private ProductFacade productFacade;
@@ -98,5 +102,51 @@ public class ProductController {
         }
 
         return "redirect:/products";
+    }
+
+    @GetMapping("/{id}")
+    public String getProduct(@PathVariable("id") Long id, Model model) {
+
+        try {
+            ProductDetailsData productDetailsData = productFacade.getProductDetailsDataById(id);
+            model.addAttribute("product", productDetailsData);
+            ReviewData reviewData = new ReviewData();
+            model.addAttribute("review", reviewData);
+        } catch (IllegalArgumentException exception) {
+            model.addAttribute("error", exception.getMessage());
+        }
+
+        return "product/product-details";
+    }
+
+    @ExceptionHandler({ResponseStatusException.class})
+    @ResponseBody
+    public ResponseEntity<String> handleException(ResponseStatusException exception) {
+
+        return new ResponseEntity<>(exception.getReason(), exception.getStatus());
+    }
+
+    @GetMapping("homepage/filter")
+    public String getAvailableProductsByCategoryIds(@RequestParam("categoryIds") List<Long> categoryIds, Model model) {
+
+        if (categoryIds.isEmpty()) {
+            return "redirect:/products/homepage";
+        }
+
+        List<ProductData> productDataList = productFacade.getAvailableProductDatasByCategoryIds(categoryIds);
+        model.addAttribute("products", productDataList);
+
+        return "product/available-product";
+    }
+
+    @GetMapping("/homepage/{pageNumber}")
+    public String getAvailableProducts(@PathVariable("pageNumber")int pageNumber, Model model) {
+        List<ProductData> productDataList = productFacade.getAvailableProductDatas(PRODUCTS_PER_PAGE, pageNumber);
+
+        model.addAttribute("noOfPages", productFacade.getNoOfPages(PRODUCTS_PER_PAGE));
+        model.addAttribute("products", productDataList);
+        model.addAttribute("status", "ok");
+
+        return "product/available-product";
     }
 }

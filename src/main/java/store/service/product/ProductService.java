@@ -14,11 +14,11 @@ public interface ProductService {
 
     Product update(Product product);
 
-    void delete(Long ean);
+    void delete(Long id);
 
-//    List<Product> getAvailableProducts(int productsPerPage, int pageNumber);
-//
-//    int getNoOfPages(int productsPerPage);
-//
-//    List<Product> getAvailableProductsByCategoryIds(List<Integer> categoryIds);
+    List<Product> getAvailableProducts(int productsPerPage, int pageNumber);
+
+    int getNoOfPages(int productsPerPage);
+
+    List<Product> getAvailableProductsByCategoryIds(List<Long> categoryIds);
 }
