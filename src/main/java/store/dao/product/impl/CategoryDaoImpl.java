@@ -14,8 +14,8 @@ public class CategoryDaoImpl extends HibernateAbstractCrudRepository<Long, Categ
     @Override
     public Optional<Category> getByName(String searchedName) {
 
-        Query<Category> query = super.getCurrentSession().createQuery("FROM " + getValueClass().getName() +
-                " WHERE name =: categoryName", Category.class);
+        String queryString = "FROM " + getValueClass().getName() + " WHERE name =: categoryName";
+        Query<Category> query = super.getCurrentSession().createQuery(queryString, Category.class);
         query.setParameter("categoryName", searchedName);
 
         return Optional.ofNullable(query.uniqueResult());

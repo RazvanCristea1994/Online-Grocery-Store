@@ -2,13 +2,13 @@ package store.service.product.impl;
 
 import org.springframework.stereotype.Service;
 import store.dao.product.CategoryDao;
-import store.model.Category;
 import store.service.product.ProductService;
 import store.dao.product.ProductDao;
 import store.model.Product;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -84,12 +84,38 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public void delete(Long ean) {
+    public void delete(Long id) {
 
-        productDao.getById(ean).ifPresentOrElse(foundProduct -> {
-            productDao.delete(ean);
+        productDao.getById(id).ifPresentOrElse(foundProduct -> {
+            productDao.delete(id);
         }, () -> {
             throw new NoSuchElementException("The specified element does not exist");
         });
+    }
+
+    @Override
+    public List<Product> getAvailableProducts(int productsPerPage, int pageNumber) {
+
+        List<Product> products = productDao.getAvailableProducts(productsPerPage, pageNumber);
+        return products;
+    }
+
+    @Override
+    public int getNoOfPages(int productsPerPage) {
+        return productDao.getNoOfPages(productsPerPage);
+    }
+
+    @Override
+    public List<Product> getAvailableProductsByCategoryIds(List<Long> categoryIds) {
+
+        List<Long> validCategoryIds = new ArrayList<>();
+
+        for (Long categoryId : categoryIds) {
+            if (categoryDao.getById(categoryId).isPresent()) {
+                validCategoryIds.add(categoryId);
+            }
+        }
+
+        return productDao.getAvailableProductsByCategoryIds(validCategoryIds);
     }
 }

@@ -1,6 +1,7 @@
 package store.facade.product;
 
 import store.data.product.ProductData;
+import store.data.product.ProductDetailsData;
 import store.model.Product;
 
 import java.util.List;
@@ -15,7 +16,13 @@ public interface ProductFacade {
 
     List<ProductData> getAll();
 
-    void delete(Long ean);
+    void delete(Long id);
 
-    //List<ProductData> getAvailableProductDatas();
+    List<ProductData> getAvailableProductDatas(int productsPerPage, int pageNumber);
+
+    int getNoOfPages(int productsPerPage);
+
+    List<ProductData> getAvailableProductDatasByCategoryIds(List<Long> categoryIds);
+
+    ProductDetailsData getProductDetailsDataById(Long id);
 }

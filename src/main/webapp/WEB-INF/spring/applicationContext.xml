@@ -15,6 +15,8 @@
 
     <context:component-scan base-package="store"/>
 
+    <context:property-placeholder location="classpath:mail.connection.properties"/>
+
     <bean id="foodShopDataSource" class="org.apache.commons.dbcp2.BasicDataSource" destroy-method="close">
         <property name="driverClassName" value="com.mysql.cj.jdbc.Driver"/>
         <property name="url" value="jdbc:mysql://localhost:3306/FOOD_SHOP"/>

@@ -18,9 +18,9 @@ public class UserDaoImpl extends HibernateAbstractCrudRepository<String, User> i
     @Override
     public List<User> getByRole(Enum askedRole) {
 
-        Session session = this.getCurrentSession();
-        Query<User> query = session.createQuery("FROM " + this.getValueClass().getName()
-                + " user WHERE user.role=:role", this.getValueClass());
+        Session session = super.getCurrentSession();
+        String queryString = "FROM " + this.getValueClass().getName() + " user WHERE user.role=:role";
+        Query<User> query = session.createQuery(queryString, this.getValueClass());
         query.setParameter("role", askedRole);
         return query.list();
     }
@@ -28,15 +28,15 @@ public class UserDaoImpl extends HibernateAbstractCrudRepository<String, User> i
     @Override
     public Optional<User> getByEmail(String email) {
 
-        Session session = this.getCurrentSession();
+        Session session = super.getCurrentSession();
         return Optional.ofNullable(session.get(this.getValueClass(), email));
     }
 
     @Override
     public Optional<User> getByPhoneNumber(String searchedPhoneNumber) {
 
-        Query<User> query = super.getCurrentSession().createQuery("FROM " + getValueClass().getName()
-                + " WHERE phoneNumber=:phoneNumber", User.class);
+        String queryString = "FROM " + getValueClass().getName() + " WHERE phoneNumber=:phoneNumber";
+        Query<User> query = super.getCurrentSession().createQuery(queryString, User.class);
         query.setParameter("phoneNumber", searchedPhoneNumber);
         return Optional.ofNullable(query.uniqueResult());
     }
@@ -44,8 +44,8 @@ public class UserDaoImpl extends HibernateAbstractCrudRepository<String, User> i
     @Override
     public List<String> getAllUserEmailsByRole(UserRole givenRole) {
 
-        Query<String> query = super.getCurrentSession().createQuery("SELECT user.email FROM " + getValueClass().getName()
-                        + " user WHERE user.role=:role", String.class);
+        String queryString ="SELECT user.email FROM " + getValueClass().getName() + " user WHERE user.role=:role";
+        Query<String> query = super.getCurrentSession().createQuery(queryString, String.class);
         query.setParameter("role", givenRole);
         return query.list();
     }

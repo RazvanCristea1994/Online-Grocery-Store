@@ -17,12 +17,11 @@ public interface ProductDao {
 
     void update(Product product);
 
-    void delete(Long ean);
+    void delete(Long id);
 
-    //ToDo:
-//    List<Product> getAvailableProducts(int productsPerPage, int pageNumber);
-//
-//    int getNoOfPages(int productsPerPage);
-//
-//    List<Product> getAvailableProductsByCategoryIds(List<Integer> categoryIds);
+    List<Product> getAvailableProducts(int productsPerPage, int pageNumber);
+
+    int getNoOfPages(int productsPerPage);
+
+    List<Product> getAvailableProductsByCategoryIds(List<Long> categoryIds);
 }
